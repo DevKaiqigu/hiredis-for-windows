@@ -459,8 +459,15 @@ addrretry:
         }
         if (blocking && redisSetBlocking(c,1) != REDIS_OK)
             goto error;
+
+#ifndef _MSC_VER
         if (redisSetTcpNoDelay(c) != REDIS_OK)
             goto error;
+#else
+		// redisSetTcpNoDelay will crash on non-blocking on Windows, do not know why.
+		if (blocking && redisSetTcpNoDelay(c) != REDIS_OK)
+			goto error;
+#endif
 
         c->flags |= REDIS_CONNECTED;
         rv = REDIS_OK;
