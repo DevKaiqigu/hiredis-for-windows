@@ -464,9 +464,8 @@ addrretry:
         if (redisSetTcpNoDelay(c) != REDIS_OK)
             goto error;
 #else
-		// redisSetTcpNoDelay will crash on non-blocking on Windows, do not know why.
-		if (blocking && redisSetTcpNoDelay(c) != REDIS_OK)
-			goto error;
+		// redisSetTcpNoDelay will crash occasionally on Windows, especially on non-blocking socket.
+		// seems it happens when socket is not connected at the moment.
 #endif
 
         c->flags |= REDIS_CONNECTED;
