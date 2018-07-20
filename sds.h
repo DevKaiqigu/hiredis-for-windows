@@ -41,11 +41,18 @@
 
 typedef char *sds;
 
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable : 4200 )
+#endif
 struct sdshdr {
     int len;
     int free;
     char buf[];
 };
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif
 
 static inline size_t sdslen(const sds s) {
     struct sdshdr *sh = (struct sdshdr *)(s-sizeof *sh);
